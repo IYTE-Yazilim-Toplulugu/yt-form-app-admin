@@ -1,5 +1,25 @@
 import mongoose, { Schema } from "mongoose";
 
+// Question için ayrı bir Schema tanımlayın
+const QuestionSchema = new Schema({
+    type: {
+        type: Number,
+        required: true
+    },
+    question: {
+        type: String,
+        required: true
+    },
+    isRequired: {
+        type: Boolean,
+        required: true
+    },
+    options: {
+        type: [String],
+        default: [] // Eğer çoktan seçmeli değilse bu array boş olabilir
+    }
+});
+
 const formSchema = new Schema({
     name: {
         type: String,
@@ -14,12 +34,8 @@ const formSchema = new Schema({
         default: 0
     },
     questions: {
-        type: [{
-            type: Number,
-            question: String,
-            isRequired: Boolean,
-            options: [String], // Eğer type'ı çoktan seçmeliye denk geliyorsa doludur
-        }],
+        type: [QuestionSchema],
+        default: [] // Bu, questions array'inin varsayılan olarak boş olacağını belirtir
     },
     isActive: {
         type: Boolean,
@@ -29,5 +45,11 @@ const formSchema = new Schema({
 
 }, { timestamps: true });
 
-const FormModel = mongoose.models.FormModel || mongoose.model("forms", formSchema)
+let FormModel: mongoose.Model<any>
+try{
+     FormModel = mongoose.model("forms")
+}
+catch(error){
+    FormModel = mongoose.model("forms", formSchema)
+}
 export default FormModel;

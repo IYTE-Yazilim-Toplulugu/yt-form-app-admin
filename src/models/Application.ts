@@ -12,5 +12,10 @@ const applicationSchema = new Schema({
 
 }, { timestamps: true });
 
-const ApplicationsModel = mongoose.models.ApplicationsModel || mongoose.model("applications", applicationSchema);
+let ApplicationsModel : mongoose.Model<any>
+try{
+     ApplicationsModel = mongoose.model("applications")
+}catch(error){
+   ApplicationsModel = mongoose.model("applications", applicationSchema)
+}
 export default ApplicationsModel;
