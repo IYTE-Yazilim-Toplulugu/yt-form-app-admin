@@ -7,7 +7,7 @@ export const POST = async (request : NextRequest) => {
     // TODO: Add new form data
 
     try {
-        const data = await request.json();3
+        const data = await request.json();
         await ConnectDB();
         await Form.create(data);
         return NextResponse.json({ message: "Form Created"}, { status: 201 });
