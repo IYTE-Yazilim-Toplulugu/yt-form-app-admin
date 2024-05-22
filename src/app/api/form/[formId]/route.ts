@@ -18,17 +18,21 @@ export const GET = async (request:NextRequest) => {
     }
 }
 
-export const UPDATE = async (request : NextRequest) => {
+export const PATCH = async (request : NextRequest) => {
     // TODO: Update the form data by given formId from the url and given request data
     //const { } = request.json();
 
     try {
+        var d;
         const data = request.json();
+        data.then((res) => {
+            d = res;
+        });
         await ConnectDB();
         const url = request.url;
         const id = url.split('/').pop();
-        const form = await Form.updateOne({ _id: id }, { data });
-        return NextResponse.json({ form, id }, { status: 200 });
+        const form = await Form.findOneAndUpdate({ _id: id },  d , { new: true});    
+        return NextResponse.json({ form}, { status: 200 });
 
     } catch (error) {
         return NextResponse.json({ message: "Form Cannot be updated"}, { status: 401 })
